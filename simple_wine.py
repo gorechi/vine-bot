@@ -29,7 +29,7 @@ async def simple_wine(message):
                 result.append(f'{product["title"]} - {product["priceSchema"]} ₽')
         else:
             print('Ничего не найдено')
-            result.append('Ничего не найдено')
+            result.append('Ничего не найдено.')
     else:
         result.append('Этот магазин сейчас недоступен.')
     await tprint(message, result)

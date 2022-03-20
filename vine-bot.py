@@ -1,6 +1,7 @@
 from aiogram import Bot, Dispatcher, executor, types
 from simple_wine import simple_wine
 from am import am_wine
+from winestyle import winestyle
 from settings import TOKEN
 import asyncio
 
@@ -9,6 +10,7 @@ dp = Dispatcher(bot)
 functions = [
     simple_wine,
     am_wine,
+    winestyle,
 ]
 
 @dp.message_handler()
