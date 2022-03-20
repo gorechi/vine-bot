@@ -40,10 +40,8 @@ async def am_wine(message):
         if products:
             for product in products:
                 if product['price'] != '0.0':
-                    print(f'{product["name"]} - {product["price"]} ₽')
                     result.append(f'{product["name"]} - {product["price"]} ₽')
         else:
-            print('Ничего не найдено')
             result.append('Ничего не найдено.')
     else:
         result.append('Этот магазин сейчас недоступен.')
