@@ -1,6 +1,9 @@
-import requests
+from requests_html import AsyncHTMLSession
+from teleprint import tprint
 
-def am_wine(search_string):
+async def am_wine(message):
+    search_string = message.text
+    session = AsyncHTMLSession()
     search_string = search_string.replace(' ', '%20')
     link = f'https://sort.diginetica.net/search'
     headers = {
@@ -30,8 +33,8 @@ def am_wine(search_string):
         'withSku': 'false',
         'sort': 'PRICE_DESC'
     }
-    result = []
-    r = requests.get(link, headers=headers, params=params)
+    result = ['Ароматный мир']
+    r = await session.get(link, headers=headers, params=params)
     if r.status_code == 200:
         products = r.json()['products']
         if products:
@@ -44,6 +47,5 @@ def am_wine(search_string):
             result.append('Ничего не найдено')
     else:
         result.append('Этот магазин сейчас недоступен.')
+    await tprint(message, result)
     return result
-
-am_wine('merlot')

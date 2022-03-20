@@ -1,6 +1,9 @@
-import requests
+from requests_html import AsyncHTMLSession
+from teleprint import tprint
 
-def simple_wine(search_string):
+async def simple_wine(message):
+    search_string = message.text
+    session = AsyncHTMLSession()
     suggestion_count = 3
     product_count = 10
     search_string = search_string.replace(' ', '+')
@@ -16,8 +19,8 @@ def simple_wine(search_string):
     'sec-fetch-mode': 'cors',
     'accept-language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'
     }
-    result = []
-    r = requests.get(link, headers=headers)
+    result = ['Simple Wine']
+    r = await session.get(link, headers=headers)
     if r.status_code == 200:
         products = r.json()['data']['products']
         if products:
@@ -29,6 +32,5 @@ def simple_wine(search_string):
             result.append('Ничего не найдено')
     else:
         result.append('Этот магазин сейчас недоступен.')
+    await tprint(message, result)
     return result
-
-simple_wine('riesling')
