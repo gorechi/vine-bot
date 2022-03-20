@@ -1,35 +1,25 @@
-import requests
+from requests_html import AsyncHTMLSession
+from teleprint import tprint
 
-def winestyle(search_string):
-    search_string = search_string.replace(' ', '+')
-    link = f'https://winestyle.ru/remote.php'
-    headers = {
-        'Host': 'winestyle.ru',
-        'Referer': 'https://winestyle.ru/catalog/?search_query=riesling',
-        'Sec-Fetch-Dest': 'empty',
-        'Sec-Fetch-Mode': 'cors',
-        'Sec-Fetch-Site': 'same-origin',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.74 Safari/537.36',
-        }
-    params = {
-        'r': 0.10271848365681024,
-        'w': 'loadmoreproducts',
-        'search_query': search_string,
-        'sort': 'productpopularity',
-        'searchlimit': 0,
-        'ajax': 1
-    }
-        
-    r = requests.get(link, headers=headers, params=params)
-    print(r.text)
-    result = []
-    if products:
-        for product in products:
-            print(f'{product["title"]} - {product["priceSchema"]} ₽')
-            result.append(f'{product["title"]} - {product["priceSchema"]} ₽')
+async def winestyle(message):
+    search_string = message.text
+    session = AsyncHTMLSession()
+    headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36'}
+    link = f'https://winestyle.ru/catalog/?search_query={search_string}'
+    link = link.replace(' ', '%20')
+    r = await session.get(link, headers=headers)
+    await r.html.arender(sleep=3)
+    result = ['Winestyle']
+    if r.status_code == 200:
+        prices = r.html.find('.price-container .price')
+        titles = r.html.find('.item-header .title')
+        if len(prices) > 0:
+            for i in range(len(prices)):
+                s = f'{titles[i].text} - {prices[i].text}'
+                result.append(s)
+        else:
+            result.append('Ничего не найдено.')
     else:
-        print('Ничего не найдено')
-        result.append('Ничего не найдено')
-    return result
+        result.append('Этот магазин сейчас недоступен.')
+    await tprint(message, result)
 
-winestyle('riesling')

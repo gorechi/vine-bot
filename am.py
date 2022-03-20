@@ -44,7 +44,7 @@ async def am_wine(message):
                     result.append(f'{product["name"]} - {product["price"]} ₽')
         else:
             print('Ничего не найдено')
-            result.append('Ничего не найдено')
+            result.append('Ничего не найдено.')
     else:
         result.append('Этот магазин сейчас недоступен.')
     await tprint(message, result)
