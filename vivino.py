@@ -30,13 +30,11 @@ async def vivino(message):
         'x-algolia-api-key': '60c11b2f1068885161d95ca068d3a6ae'
     }
     
-    payload = {
-    "params":f"query={search_string}&hitsPerPage=6"
-    }
+    payload = '{"params":"query=' + search_string + '&hitsPerPage=6"}'
     
     print(payload)
     link = f'https://9takgwjuxl-dsn.algolia.net/1/indexes/WINES_prod/query'
-    r = await session.post(link, headers=headers, data=payload, params=params)
+    r = await session.post(link, headers=headers, data=payload.encode('utf-8'), params=params)
     print(r.headers, r.json())
     result = ['Vivino']
     
