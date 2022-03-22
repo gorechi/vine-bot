@@ -32,10 +32,8 @@ async def vivino(message):
     
     payload = '{"params":"query=' + search_string + '&hitsPerPage=6"}'
     
-    print(payload)
     link = f'https://9takgwjuxl-dsn.algolia.net/1/indexes/WINES_prod/query'
     r = await session.post(link, headers=headers, data=payload.encode('utf-8'), params=params)
-    print(r.headers, r.json())
     result = ['Vivino']
     
     if r.status_code == 200:
