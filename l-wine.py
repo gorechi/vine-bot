@@ -19,7 +19,6 @@ def l_wine(search_string):
     }
     
     r = requests.post(link, headers=headers, params=params)
-    print(r)
     '''  products = r.json()['data']['products']
     result = []
     if products:
