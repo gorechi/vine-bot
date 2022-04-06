@@ -3,6 +3,7 @@ from simple_wine import simple_wine
 from am import am_wine
 from winestyle import winestyle
 from vivino import vivino
+from lenta import lenta
 from winelab import winelab
 from l_wine import l_wine
 from metro import metro
@@ -17,7 +18,8 @@ functions = [
    am_wine,
    winestyle,
    simple_wine,
-   vivino
+   vivino,
+   lenta
 ]
 
 @dp.message_handler()
