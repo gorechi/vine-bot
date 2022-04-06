@@ -1,9 +1,7 @@
-from requests_html import AsyncHTMLSession
 from teleprint import tprint
 
-async def am_wine(message):
+async def am_wine(message:object, session:object) -> None:
     search_string = message.text
-    session = AsyncHTMLSession()
     search_string = search_string.replace(' ', '%20')
     link = f'https://sort.diginetica.net/search'
     headers = {
@@ -40,10 +38,10 @@ async def am_wine(message):
         if products:
             for product in products:
                 if product['price'] != '0.0':
-                    result.append(f'{product["name"]} - {product["price"]} ₽')
+                    link = f'https://amwine.ru{product["link_url"]}'
+                    result.append(f'<a href = "{link}">{product["name"]}</a> - <b>{product["price"]}</b> ₽')
         else:
             result.append('Ничего не найдено.')
     else:
         result.append('Этот магазин сейчас недоступен.')
     await tprint(message, result)
-    return result

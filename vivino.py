@@ -1,9 +1,8 @@
-from requests_html import AsyncHTMLSession
 from teleprint import tprint
 
-async def vivino(message):
+
+async def vivino(message:object, session:object) -> None:
     search_string = message.text
-    session = AsyncHTMLSession()
     
     headers = {
     'accept': 'application/json',
@@ -30,7 +29,7 @@ async def vivino(message):
         'x-algolia-api-key': '60c11b2f1068885161d95ca068d3a6ae'
     }
     
-    payload = '{"params":"query=' + search_string + '&hitsPerPage=6"}'
+    payload = '{"params":"query=' + search_string + '&hitsPerPage=10"}'
     
     link = f'https://9takgwjuxl-dsn.algolia.net/1/indexes/WINES_prod/query'
     r = await session.post(link, headers=headers, data=payload.encode('utf-8'), params=params)
@@ -40,7 +39,11 @@ async def vivino(message):
         products = r.json()['hits']
         if products:
             for product in products:
-                result.append(f'{product["winery"]["name"]} {product["name"]} - {product["statistics"]["ratings_average"]} ({product["statistics"]["ratings_count"]} голосов.)')
+                if product["winery"]["name"] and product["name"] and product["statistics"]["ratings_average"] and product["statistics"]["ratings_count"]:
+                    link = f'https://www.vivino.com/{product["seo_name"]}/w/{product["id"]}?ref=nav-search'
+                    name = f'{product["winery"]["name"]} {product["name"]}'
+                    rating = f'<b>{product["statistics"]["ratings_average"]}</b> ({product["statistics"]["ratings_count"]} голосов).'
+                    result.append(f'<a href="{link}">{name}</a> - {rating}')
         else:
             result.append('Ничего не найдено.')
     else:

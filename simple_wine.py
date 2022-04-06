@@ -1,9 +1,7 @@
-from requests_html import AsyncHTMLSession
 from teleprint import tprint
 
-async def simple_wine(message):
+async def simple_wine(message:object, session:object) -> None:
     search_string = message.text
-    session = AsyncHTMLSession()
     suggestion_count = 3
     product_count = 10
     search_string = search_string.replace(' ', '+')
@@ -25,10 +23,10 @@ async def simple_wine(message):
         products = r.json()['data']['products']
         if products:
             for product in products:
-                result.append(f'{product["title"]} - {product["priceSchema"]} ₽')
+                link = f'https://simplewine.ru{product["detailPageUrl"]}'
+                result.append(f'<a href = "{link}">{product["title"]}</a> - <b>{product["priceSchema"]}</b> ₽')
         else:
             result.append('Ничего не найдено.')
     else:
         result.append('Этот магазин сейчас недоступен.')
     await tprint(message, result)
-    return result
