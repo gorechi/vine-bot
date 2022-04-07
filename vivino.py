@@ -39,11 +39,13 @@ async def vivino(message:object, session:object) -> None:
         products = r.json()['hits']
         if products:
             for product in products:
-                if product["winery"]["name"] and product["name"] and product["statistics"]["ratings_average"] and product["statistics"]["ratings_count"]:
-                    link = f'https://www.vivino.com/{product["seo_name"]}/w/{product["id"]}?ref=nav-search'
+                link = f'https://www.vivino.com/{product["seo_name"]}/w/{product["id"]}?ref=nav-search'
+                if product.get('winery', False):
                     name = f'{product["winery"]["name"]} {product["name"]}'
-                    rating = f'<b>{product["statistics"]["ratings_average"]}</b> ({product["statistics"]["ratings_count"]} голосов).'
-                    result.append(f'<a href="{link}">{name}</a> - {rating}')
+                else:
+                    name = product['name']
+                rating = f'<b>{product["statistics"]["ratings_average"]}</b> ({product["statistics"]["ratings_count"]} голосов).'
+                result.append(f'<a href="{link}">{name}</a> - {rating}')
         else:
             result.append('Ничего не найдено.')
     else:
